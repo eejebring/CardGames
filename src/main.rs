@@ -1,9 +1,12 @@
-use crate::console_querry::read_line;
+use crate::console_querry::{Query};
 
 mod console_querry;
 
 fn main() {
-    let mut x = &mut "".to_string();
-    read_line(x);
-    println!("{}",x);
+    let question = Query {
+        question: "Pick a game! \n 1. blackjack",
+        fail: "I said number!"
+    };
+
+    println!("{}",question.query_int());
 }
