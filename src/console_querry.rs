@@ -10,7 +10,7 @@ pub struct Query {
 }
 
 impl Query {
-    pub fn querry(&self) -> String {
+    pub fn query(&self) -> String {
 
         println!("{}", self.question);
         let mut buffer = String::new();
@@ -27,8 +27,8 @@ impl Query {
         return buffer;
     }
 
-    pub fn query_int(&self) -> i64 {
-        let mut buffer = self.querry().trim_end().parse();
+    pub fn query_int(&self) -> isize {
+        let mut buffer = self.query().trim_end().parse();
 
         loop {
             match buffer {
@@ -36,6 +36,45 @@ impl Query {
                 Err(e) => buffer = self.failSafe().trim_end().parse()
             }
         }
+    }
+}
+
+pub struct OptionQuery {
+    pub question: Query,
+    pub options: vec<str>
+}
+
+impl OptionQuery {
+    pub fn new(q: &str, o: vec<str>) -> OptionQuery {
+        let mut fullQuery = String::from(q);
+        let mut num = 0;
+        for item in o {
+            fullQuery += format!("\n  {}. {}.", num, item).clone();
+        }
+        OptionQuery {
+            question: Query {
+                question: q,
+                fail: "Please enter a number."
+            },
+            options: o
+        }
+    }
+
+    pub fn query(&self) -> isize {
+        let x = self.options.iter();
+        let mut val = self.question.query_int();
+        loop {
+            match val {
+                _ if val < self.options.len => break,
+                _ => {
+                    val = Query {
+                        question: "Enter a valid option.",
+                        fail: "Please enter a number."
+                    }.query_int()
+                }
+            }
+        }
+        return val;
     }
 }
 
