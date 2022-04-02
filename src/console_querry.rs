@@ -5,8 +5,8 @@ use std::thread::{sleep, Thread};
 use std::time::Duration;
 
 pub struct Query {
-    pub question: &'static str,
-    pub fail: &'static str
+    pub question: String,
+    pub fail: String
 }
 
 impl Query {
@@ -37,41 +37,51 @@ impl Query {
             }
         }
     }
+
+    pub fn query_uint(&self) -> usize {
+        let mut buffer = self.query().trim_end().parse();
+
+        loop {
+            match buffer {
+                Ok(n) => return buffer.unwrap(),
+                Err(e) => buffer = self.failSafe().trim_end().parse()
+            }
+        }
+    }
 }
 
 pub struct OptionQuery {
     pub question: Query,
-    pub options: vec<str>
+    pub options: usize
 }
 
 impl OptionQuery {
-    pub fn new(q: &str, o: vec<str>) -> OptionQuery {
+    pub fn new(q: &str, o: Vec<String>) -> OptionQuery {
         let mut fullQuery = String::from(q);
         let mut num = 0;
+        let count = o.len();
         for item in o {
-            fullQuery += format!("\n  {}. {}.", num, item).clone();
+            num += 1;
+            fullQuery += &format!("\n  {}. {}.", num, item).clone();
         }
         OptionQuery {
             question: Query {
-                question: q,
-                fail: "Please enter a number."
+                question: fullQuery,
+                fail: "Please enter a number.".to_string()
             },
-            options: o
+            options: count
         }
     }
 
-    pub fn query(&self) -> isize {
-        let x = self.options.iter();
-        let mut val = self.question.query_int();
+    pub fn query(&self) -> usize {
+        let mut val = self.question.query_uint();
         loop {
-            match val {
-                _ if val < self.options.len => break,
-                _ => {
-                    val = Query {
-                        question: "Enter a valid option.",
-                        fail: "Please enter a number."
-                    }.query_int()
-                }
+            if val <= self.options && val > 0 { break }
+            else { val = Query {
+                question: "Enter a valid option.".to_string(),
+                fail: "Please enter a number.".to_string()
+            }.query_uint()
+
             }
         }
         return val;
