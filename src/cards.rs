@@ -1,11 +1,21 @@
 use std::fmt;
 use std::fmt::Formatter;
+use std::slice::Iter;
 
-enum card_colour {
+
+#[derive(Copy, Clone)]
+pub(crate) enum card_colour {
     Hearts,
     Diamonds,
     Spades,
     Clovers
+}
+
+impl card_colour {
+    pub fn iter() -> Iter<'static, card_colour> {
+        static colours: [card_colour;4] = [card_colour::Hearts,card_colour::Diamonds,card_colour::Spades,card_colour::Clovers];
+        colours.iter()
+    }
 }
 
 impl fmt::Display for card_colour {
@@ -21,8 +31,8 @@ impl fmt::Display for card_colour {
 }
 
 pub struct Card {
-    colour: card_colour,
-    value: u8
+    pub(crate) colour: card_colour,
+    pub(crate) value: u8
 }
 
 impl Card {

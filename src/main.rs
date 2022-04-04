@@ -4,14 +4,9 @@ use crate::console_querry::{Query, OptionQuery};
 mod console_querry;
 mod blackjack;
 mod cards;
+mod card_collection;
 
 fn main() {
-    let question = Query {
-        question: "Give me a number".to_string(),
-        fail: "That is not a number!\n Please try again:".to_string()
-    };
-
-    println!("{}",question.query_int() * 2);
 
     let main_menu = OptionQuery::new("what game would you like to play?", vec![
         "Blackjack".to_string(),
