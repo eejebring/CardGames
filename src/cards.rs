@@ -30,6 +30,7 @@ impl fmt::Display for card_colour {
     }
 }
 
+#[derive(Copy, Clone)]
 pub struct Card {
     pub(crate) colour: card_colour,
     pub(crate) value: u8
