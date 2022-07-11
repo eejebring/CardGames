@@ -14,7 +14,7 @@ impl CardStack {
     pub fn newDeck() -> CardStack {
         let mut deck = CardStack {cards: vec![]};
         for c in card_colour::iter() {
-            for i in 1..14 {
+            for i in 1..=13 {
                 deck.cards.push(Card {colour: *c, value: i})
             }
         };
@@ -71,7 +71,6 @@ impl blackjackSum for CardStack {
         };
         loop {
             if sum <= 11 && 1 <= acees {
-                println!("found ace");
                 acees -= 1;
                 sum += 10;
             }
